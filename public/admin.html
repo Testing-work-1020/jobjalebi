@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - JobJalebi</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Admin Panel</h1>
+    <button class="btn-primary" onclick="window.location.href='index.html'">← Back to Jobs</button>
+  </header>
+
+  <main id="job-list" class="job-grid"></main>
+
+  <footer>
+    <p>© 2025 JobJalebi. Admin Panel</p>
+  </footer>
+
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import {
+      ref,
+      onValue,
+      remove,
+      push,
+      get
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const jobList = document.getElementById("job-list");
+    const submissionsRef = ref(db, "submissions");
+
+    onValue(submissionsRef, (snapshot) => {
+      jobList.innerHTML = "";
+      snapshot.forEach((childSnapshot) => {
+        const job = childSnapshot.val();
+        const id = childSnapshot.key;
+
+        const jobCard = document.createElement("div");
+        jobCard.className = "job-card";
+        jobCard.innerHTML = `
+          <h3>${job.title}</h3>
+          <p><strong>${job.company}</strong><br>${job.location} (${job.type})</p>
+          <div class="admin-buttons">
+            <a href="${job.link}" target="_blank" class="apply-btn">🔗 View</a>
+            <button class="btn-primary" data-id="${id}" data-action="approve">✅ Approve</button>
+            <button class="btn-danger" data-id="${id}" data-action="reject">❌ Reject</button>
+          </div>
+        `;
+
+        jobList.appendChild(jobCard);
+      });
+
+      document.querySelectorAll("button[data-action]").forEach(button => {
+        button.addEventListener("click", async () => {
+          const id = button.getAttribute("data-id");
+          const action = button.getAttribute("data-action");
+          const jobRef = ref(db, `submissions/${id}`);
+          const jobSnap = await get(jobRef);
+          const jobData = jobSnap.val();
+
+          if (action === "approve") {
+            await push(ref(db, "jobs"), jobData);
+          }
+          await remove(jobRef);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

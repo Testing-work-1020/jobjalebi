@@ -1,0 +1,17 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "fetch_jobs.js",
+  "scripts": {
+    "start": "node fetch_jobs.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "firebase-admin": "^13.4.0",
+    "node-fetch": "^3.3.2"
+  }
+}

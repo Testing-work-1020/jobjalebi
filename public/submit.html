@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submit a Job - JobJalebi</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .form-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    form input,
+    form select,
+    form button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0 1rem 0;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    form button {
+      background-color: #ff6a00;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    form button:hover {
+      background-color: #e55d00;
+    }
+
+    header h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #ffffff;
+      color: white;
+    }
+
+    .btn-primary {
+      background-color: white;
+      color: #ff6a00;
+      border: 1px solid #ff6a00;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: #ffe7d4;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Submit a Job</h1>
+    <button class="btn-primary" onclick="window.location.href='index.html'">← Back to Jobs</button>
+  </header>
+
+  <main class="form-container">
+    <form id="job-form">
+      <input type="text" placeholder="Job Title" id="title" required />
+      <input type="text" placeholder="Company Name" id="company" required />
+      <input type="text" placeholder="Location" id="location" required />
+      <select id="type" required>
+        <option value="" disabled selected>Select Sector</option>
+        <option value="public">Public Sector</option>
+        <option value="private">Private Sector</option>
+      </select>
+      <input type="url" placeholder="Application Link" id="link" required />
+      <button type="submit" class="btn-primary">Submit Job</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>© 2025 JobJalebi. All rights reserved.</p>
+  </footer>
+
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import {
+      push,
+      ref
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    document.getElementById("job-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value.trim();
+      const company = document.getElementById("company").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const type = document.getElementById("type").value.trim();
+      const link = document.getElementById("link").value.trim();
+
+      const job = {
+        title,
+        company,
+        location,
+        type,
+        link,
+        clicks: 0
+      };
+
+      try {
+        await push(ref(db, "submissions"), job);
+        alert("Job submitted for review!");
+        document.getElementById("job-form").reset();
+      } catch (err) {
+        console.error(err);
+        alert("Failed to submit job. Try again.");
+      }
+    });
+  </script>
+</body>
+</html>

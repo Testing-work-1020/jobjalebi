@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JobJalebi - Find Your Next Job</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>JobJalebi</h1>
+    <button id="submit-job-btn" class="btn-primary">Submit a Job</button>
+  </header>
+
+  <section id="filters">
+    <div id="tabs">
+      <button class="tab-btn active" data-type="all">All Jobs</button>
+      <button class="tab-btn" data-type="public">Public Sector</button>
+      <button class="tab-btn" data-type="private">Private Sector</button>
+      <button class="tab-btn" data-type="popular">Popular</button>
+    </div>
+    <input
+      type="search"
+      id="search-input"
+      placeholder="Search by job title, company, or location..."
+      autocomplete="off"
+    />
+  </section>
+
+  <main id="job-list" class="job-grid"></main>
+
+  <footer>
+    <p>© 2025 JobJalebi. All rights reserved.</p>
+  </footer>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    // Navigate to submit.html when clicking submit job button
+    document.getElementById("submit-job-btn").addEventListener("click", () => {
+      window.location.href = "submit.html";
+    });
+  </script>
+</body>
+</html>
